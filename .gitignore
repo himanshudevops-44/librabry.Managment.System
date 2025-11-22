@@ -1,24 +1,153 @@
-# Compiled class file
-*.class
+import java.util.ArrayList;
+import java.util.Scanner;
 
-# Log file
-*.log
+class Book {
+    private int id;
+    private String title;
+    private String author;
+    private boolean isAvailable;
 
-# BlueJ files
-*.ctxt
+    public Book(int id, String title, String author) {
+        this.id = id;
+        this.title = title;
+        this.author = author;
+        this.isAvailable = true;
+    }
 
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
+    public int getId() {
+        return id;
+    }
 
-# Package Files #
-*.jar
-*.war
-*.nar
-*.ear
-*.zip
-*.tar.gz
-*.rar
+    public String getTitle() {
+        return title;
+    }
 
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-hs_err_pid*
-replay_pid*
+    public String getAuthor() {
+        return author;
+    }
+
+    public boolean isAvailable() {
+        return isAvailable;
+    }
+
+    public void borrowBook() {
+        isAvailable = false;
+    }
+
+    public void returnBook() {
+        isAvailable = true;
+    }
+}
+
+public class LibraryManagementSystem {
+
+    static ArrayList<Book> books = new ArrayList<>();
+    static Scanner sc = new Scanner(System.in);
+
+    public static void main(String[] args) {
+        addSampleBooks();
+        int choice;
+
+        do {
+            System.out.println("\n===== LIBRARY MANAGEMENT SYSTEM =====");
+            System.out.println("1. View All Books");
+            System.out.println("2. Borrow a Book");
+            System.out.println("3. Return a Book");
+            System.out.println("4. Add New Book");
+            System.out.println("5. Exit");
+            System.out.print("Enter choice: ");
+            choice = sc.nextInt();
+
+            switch (choice) {
+                case 1:
+                    viewBooks();
+                    break;
+                case 2:
+                    borrowBook();
+                    break;
+                case 3:
+                    returnBook();
+                    break;
+                case 4:
+                    addBook();
+                    break;
+                case 5:
+                    System.out.println("Exiting... Thank you!");
+                    break;
+                default:
+                    System.out.println("Invalid option. Try again.");
+            }
+
+        } while (choice != 5);
+    }
+
+    static void addSampleBooks() {
+        books.add(new Book(1, "Atomic Habits", "James Clear"));
+        books.add(new Book(2, "The Alchemist", "Paulo Coelho"));
+        books.add(new Book(3, "Clean Code", "Robert C. Martin"));
+    }
+
+    static void viewBooks() {
+        System.out.println("\n--- Available Books ---");
+        for (Book b : books) {
+            System.out.println(
+                "ID: " + b.getId() +
+                " | Title: " + b.getTitle() +
+                " | Author: " + b.getAuthor() +
+                " | Available: " + (b.isAvailable() ? "Yes" : "No")
+            );
+        }
+    }
+
+    static void borrowBook() {
+        System.out.print("\nEnter Book ID to borrow: ");
+        int id = sc.nextInt();
+
+        for (Book b : books) {
+            if (b.getId() == id) {
+                if (b.isAvailable()) {
+                    b.borrowBook();
+                    System.out.println("Book borrowed successfully!");
+                } else {
+                    System.out.println("Book is not available.");
+                }
+                return;
+            }
+        }
+        System.out.println("Book not found!");
+    }
+
+    static void returnBook() {
+        System.out.print("\nEnter Book ID to return: ");
+        int id = sc.nextInt();
+
+        for (Book b : books) {
+            if (b.getId() == id) {
+                if (!b.isAvailable()) {
+                    b.returnBook();
+                    System.out.println("Book returned successfully!");
+                } else {
+                    System.out.println("Book was not borrowed.");
+                }
+                return;
+            }
+        }
+        System.out.println("Book not found!");
+    }
+
+    static void addBook() {
+        System.out.print("\nEnter Book ID: ");
+        int id = sc.nextInt();
+        sc.nextLine();
+
+        System.out.print("Enter Book Title: ");
+        String title = sc.nextLine();
+
+        System.out.print("Enter Book Author: ");
+        String author = sc.nextLine();
+
+        books.add(new Book(id, title, author));
+        System.out.println("Book added successfully!");
+    }
+}
+
